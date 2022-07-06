@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using WebApi.DataAccess.Models.Derived.Misc;
 using WebApi.DataAccess.Models.Derived.User;
 using WebApi.DataAccess.Repository.Derived.Misc.JsonEntity;
@@ -19,10 +20,7 @@ namespace WebApi.DataAccess
             services.AddDbContext<MiscContext>();
             services.AddDbContext<UserContext>();
 
-            services.AddScoped<IJsonEntityRepository, JsonEntityRepository>();
             services.AddScoped<IMiscUnitOfWork, MiscUnitOfWork>();
-
-            services.AddScoped<IAccountRepository, AccountRepository>();
             services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
         }
     }

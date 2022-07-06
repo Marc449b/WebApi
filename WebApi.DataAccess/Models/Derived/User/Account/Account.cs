@@ -7,6 +7,6 @@ namespace WebApi.DataAccess.Models.Derived.User.Account
         /// <summary>
         /// Account username
         /// </summary>
-        public virtual string? Username { get; set; }
+        public virtual string Username { get; set; }
     }
 }

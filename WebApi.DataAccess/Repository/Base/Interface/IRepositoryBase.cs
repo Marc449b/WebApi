@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        Task<TModel?> GetByIdAsync(
+        Task<TModel> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken = default);
 

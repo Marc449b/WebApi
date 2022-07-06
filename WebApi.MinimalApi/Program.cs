@@ -1,8 +1,8 @@
-using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Text.Json;
 using WebApi.DataAccess;
 using WebApi.DataAccess.Models.Derived.Misc.JsonObject;
-using WebApi.DataAccess.UnitOfWork.Derived.Misc;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -23,24 +23,37 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapPost("/json", async (string data, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
+app.MapPost("/json", async (object obj, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
 {
-    var json = new JsonEntity()
+    try
     {
-        Entities = JObject.Parse(data)
-    };
-    await miscUnitOfWork.JsonEntityRepository.AddAsync(json, cancellationToken);
-    await miscUnitOfWork.SaveChangesAsync(cancellationToken);
+        var json = new JsonEntity()
+        {
+            Entities = JObject.Parse(obj.ToString()!)
+        };
+        await miscUnitOfWork.JsonEntityRepository.AddAsync(json, cancellationToken);
+        await miscUnitOfWork.SaveChangesAsync(cancellationToken);
 
-    return Results.Created($"/json/{json.Id}", json);
+        return Results.Created($"/json/{json.Id}", new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Entities)) });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 });
 
 
-app.MapGet("/json/{id}", async ([FromServices] IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
+app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
 {
-    var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
-
-    return Results.Ok(json);
+    try
+    {
+        var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Entities)) });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
 }).WithName("GetJson");
 
 app.Run();

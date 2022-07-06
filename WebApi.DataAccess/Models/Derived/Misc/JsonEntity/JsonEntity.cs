@@ -5,6 +5,6 @@ namespace WebApi.DataAccess.Models.Derived.Misc.JsonObject
 {
     public class JsonEntity : BaseEntity
     {
-        public JObject? Entities { get; set; }
+        public JObject Entities { get; set; }
     }
 }

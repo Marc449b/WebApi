@@ -8,9 +8,11 @@ namespace WebApi.DataAccess.UnitOfWork.Derived.User
 {
     public class UserUnitOfWork : UnitOfWorkBase<UserContext>, IUserUnitOfWork
     {
+        private AccountRepository accountRepository;
+
         public UserUnitOfWork(UserContext context) : base(context) { }
 
 
-        public IAccountRepository AccountRepository => AccountRepository ?? new AccountRepository(context);
+        public IAccountRepository AccountRepository { get => accountRepository ??= new(context); }
     }
 }

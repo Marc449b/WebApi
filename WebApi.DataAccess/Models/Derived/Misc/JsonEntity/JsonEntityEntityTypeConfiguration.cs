@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using WebApi.DataAccess.Models.Base.Entity;
 
 namespace WebApi.DataAccess.Models.Derived.Misc.JsonObject

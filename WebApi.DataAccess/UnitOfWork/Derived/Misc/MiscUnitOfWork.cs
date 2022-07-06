@@ -8,9 +8,11 @@ namespace WebApi.DataAccess.UnitOfWork.Derived.Misc
 {
     public class MiscUnitOfWork : UnitOfWorkBase<MiscContext>, IMiscUnitOfWork
     {
+        private JsonEntityRepository jsonEntityRepository;
+
         public MiscUnitOfWork(MiscContext context) : base(context) { }
 
 
-        public IJsonEntityRepository JsonEntityRepository => JsonEntityRepository ?? new JsonEntityRepository(context);
-    }
+        public IJsonEntityRepository JsonEntityRepository { get => jsonEntityRepository ??= new (context); }
+}
 }

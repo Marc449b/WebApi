@@ -21,7 +21,7 @@ namespace WebApi.DataAccess.Repository.Base
             await context.AddAsync(model, cancellationToken);
         }
 
-        public virtual async Task<TModel?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual async Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await context.Set<TModel>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }

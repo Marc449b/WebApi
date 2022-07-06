@@ -12,15 +12,6 @@ namespace WebApi.DataAccess.Models.Base
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Connection string should be injected
-            optionsBuilder.UseMySql(
-                ServerVersion.AutoDetect("Server=localhost;Database=misc;Uid=root;"),
-                mySqlOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 10,
-                    maxRetryDelay: TimeSpan.FromSeconds(5),
-                    errorNumbersToAdd: null);
-                });
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
