@@ -29,12 +29,12 @@ app.MapPost("/json", async (object obj, IMiscUnitOfWork miscUnitOfWork, Cancella
     {
         var json = new JsonEntity()
         {
-            Entities = JObject.Parse(obj.ToString()!)
+            Data = JObject.Parse(obj.ToString()!)
         };
         await miscUnitOfWork.JsonEntityRepository.AddAsync(json, cancellationToken);
         await miscUnitOfWork.SaveChangesAsync(cancellationToken);
 
-        return Results.Created($"/json/{json.Id}", new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Entities)) });
+        return Results.Created($"/json/{json.Id}", new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
     }
     catch (Exception ex)
     {
@@ -48,7 +48,7 @@ app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToke
     try
     {
         var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
-        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Entities)) });
+        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
     }
     catch (Exception ex)
     {

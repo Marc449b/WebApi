@@ -12,7 +12,7 @@ namespace WebApi.DataAccess.Models.Derived.Misc.JsonObject
             base.Configure(builder);
 
             // Additional properties
-            builder.Property(x => x.Entities)
+            builder.Property(x => x.Data)
                 .HasConversion(
                 v => JsonConvert.SerializeObject(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }), 
                 v => JsonConvert.DeserializeObject<JObject>(v, new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore }));
