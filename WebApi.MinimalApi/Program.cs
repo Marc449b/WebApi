@@ -1,4 +1,9 @@
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Linq;
 using WebApi.DataAccess;
+using WebApi.DataAccess.Models.Derived.Misc.JsonObject;
+using WebApi.DataAccess.UnitOfWork.Derived.Misc;
+using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,28 +23,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-var summaries = new[]
+app.MapPost("/json", async (string data, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
 {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+    var json = new JsonEntity()
+    {
+        Entities = JObject.Parse(data)
+    };
+    await miscUnitOfWork.JsonEntityRepository.AddAsync(json, cancellationToken);
+    await miscUnitOfWork.SaveChangesAsync(cancellationToken);
 
-app.MapGet("/weatherforecast", () =>
+    return Results.Created($"/json/{json.Id}", json);
+});
+
+
+app.MapGet("/json/{id}", async ([FromServices] IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
 {
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateTime.Now.AddDays(index),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
+    var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+
+    return Results.Ok(json);
+}).WithName("GetJson");
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

@@ -5,6 +5,6 @@
     /// </summary>
     public interface IUnitOfWorkBase : IDisposable
     {
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 }

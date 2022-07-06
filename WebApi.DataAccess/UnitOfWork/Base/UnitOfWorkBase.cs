@@ -14,9 +14,9 @@ namespace WebApi.DataAccess.UnitOfWork.Base
         }
 
 
-        public virtual async Task SaveChangesAsync()
+        public virtual async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await context.SaveChangesAsync();
+            await context.SaveChangesAsync(cancellationToken);
         }
 
 
