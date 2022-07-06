@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApi.DataAccess.Models.Base;
+using WebApi.DataAccess.Models.Base.Entity;
 using WebApi.DataAccess.Repository.Base.Interface;
 
 namespace WebApi.DataAccess.Repository.Base

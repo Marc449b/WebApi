@@ -1,4 +1,4 @@
-﻿namespace WebApi.DataAccess.Models.Base
+﻿namespace WebApi.DataAccess.Models.Base.Entity
 {
     /// <summary>
     /// Base entity for database models.

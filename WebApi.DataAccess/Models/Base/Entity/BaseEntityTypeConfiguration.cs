@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 
-namespace WebApi.DataAccess.Models.Base
+namespace WebApi.DataAccess.Models.Base.Entity
 {
     /// <summary>
     /// Base entity type configuration for database models.
