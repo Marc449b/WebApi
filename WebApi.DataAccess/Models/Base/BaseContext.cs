@@ -16,8 +16,10 @@ namespace WebApi.DataAccess.Models.Base
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Configurations should be applied in derived context
-            throw new NotImplementedException();
+            // Apply type configurations only from this namespace
+            modelBuilder.ApplyConfigurationsFromAssembly(
+                GetType().Assembly,
+                x => x.Namespace != GetType().Namespace);
         }
     }
 }
