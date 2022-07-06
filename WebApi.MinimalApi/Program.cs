@@ -1,5 +1,4 @@
-using WebApi.DataAccess.Models.Derived.Misc;
-using WebApi.DataAccess.Models.Derived.User;
+using WebApi.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,8 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<MiscContext>();
-builder.Services.AddDbContext<UserContext>();
+builder.Services.AddDataAccess();
 
 var app = builder.Build();
 
