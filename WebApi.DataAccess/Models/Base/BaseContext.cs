@@ -2,7 +2,7 @@
 
 namespace WebApi.DataAccess.Models.Base
 {
-    public partial class BaseContext : DbContext
+    public abstract class BaseContext : DbContext
     {
         public BaseContext() { }
 
@@ -12,6 +12,15 @@ namespace WebApi.DataAccess.Models.Base
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // Connection string should be injected
+            optionsBuilder.UseMySql(
+                ServerVersion.AutoDetect("Server=localhost;Database=misc;Uid=root;"),
+                mySqlOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorNumbersToAdd: null);
+                });
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -19,7 +28,7 @@ namespace WebApi.DataAccess.Models.Base
             // Apply type configurations only from this namespace
             modelBuilder.ApplyConfigurationsFromAssembly(
                 GetType().Assembly,
-                x => x.Namespace != GetType().Namespace);
+                t => t.Namespace!.Contains(GetType().Namespace!));
         }
     }
 }
