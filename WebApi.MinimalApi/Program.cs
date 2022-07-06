@@ -8,10 +8,8 @@ using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
 builder.Services.AddDataAccess();
 
 var app = builder.Build();
@@ -22,6 +20,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
+{
+    try
+    {
+        var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
 
 app.MapPost("/json", async (object obj, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
 {
@@ -42,18 +53,5 @@ app.MapPost("/json", async (object obj, IMiscUnitOfWork miscUnitOfWork, Cancella
     }
 });
 
-
-app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
-{
-    try
-    {
-        var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
-        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
-    }
-    catch (Exception ex)
-    {
-        return Results.Problem(ex.Message);
-    }
-}).WithName("GetJson");
 
 app.Run();
