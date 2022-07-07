@@ -77,5 +77,25 @@ app.MapPut("/json/{id}", async (Guid id, object obj, IMiscUnitOfWork miscUnitOfW
     }
 });
 
+app.MapDelete("/json/{id}", async (Guid id, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
+{
+    try
+    {
+        var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+        if (json is null)
+            Results.NotFound();
+
+        var model = json.ToEntity();
+
+        miscUnitOfWork.JsonEntityRepository.Remove(model);
+        await miscUnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Results.Ok();
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
 
 app.Run();
