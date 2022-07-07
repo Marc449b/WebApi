@@ -3,13 +3,10 @@ using WebApi.DataAccess.Models.Base.Entity;
 
 namespace WebApi.DataAccess.Dto.Base
 {
-    public abstract class BaseDto<TDto, TModel> : IRegister
+    public abstract class BaseDto<TDto, TModel> : BaseEntity, IRegister
         where TDto : class, new()
         where TModel : BaseEntity, new()
     {
-        public Guid Id { get; set; }
-
-
         public TModel ToEntity()
         {
             return this.Adapt<TModel>();

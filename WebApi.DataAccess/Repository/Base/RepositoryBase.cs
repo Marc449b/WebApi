@@ -1,11 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Mapster;
+using Microsoft.EntityFrameworkCore;
 using WebApi.DataAccess.Models.Base.Entity;
 using WebApi.DataAccess.Repository.Base.Interface;
 
 namespace WebApi.DataAccess.Repository.Base
 {
-    public abstract class RepositoryBase<TModel, TContext> : IRepositoryBase<TModel>
+    public abstract class RepositoryBase<TModel, TDto, TContext> : IRepositoryBase<TModel, TDto>
         where TModel : BaseEntity
+        where TDto : BaseEntity
         where TContext : DbContext, new()
     {
         protected TContext context;
@@ -21,9 +23,9 @@ namespace WebApi.DataAccess.Repository.Base
             await context.AddAsync(model, cancellationToken);
         }
 
-        public virtual async Task<TModel> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public virtual async Task<TDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            return await context.Set<TModel>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return await context.Set<TModel>().ProjectToType<TDto>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
         public virtual void Remove(TModel model)

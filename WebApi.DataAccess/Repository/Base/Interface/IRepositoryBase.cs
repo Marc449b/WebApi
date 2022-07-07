@@ -4,22 +4,22 @@
     /// Base repository for easy and fast development of repositories.
     /// </summary>
     /// <typeparam name="TModel"></typeparam>
-    public interface IRepositoryBase<TModel>
+    public interface IRepositoryBase<TModel, TDto>
     {
         /// <summary>
         /// Add a <see cref="TModel"/> to the database.
         /// </summary>
         /// <param name="model"></param>
-       Task AddAsync(
-            TModel model,
-            CancellationToken cancellationToken = default);
+        Task AddAsync(
+             TModel model,
+             CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Get an entity by the primary id.
         /// </summary>
         /// <param name="id"></param>
         /// <param name="cancellationToken"></param>
-        Task<TModel> GetByIdAsync(
+        Task<TDto> GetByIdAsync(
             Guid id,
             CancellationToken cancellationToken = default);
 
