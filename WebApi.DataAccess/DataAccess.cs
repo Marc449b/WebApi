@@ -17,8 +17,32 @@ namespace WebApi.DataAccess
     {
         public static void AddDataAccess(this IServiceCollection services)
         {
-            services.AddDbContext<MiscContext>();
-            services.AddDbContext<UserContext>();
+            services.AddDbContext<MiscContext>(options =>
+            {
+                options.UseMySql(
+                "Server=localhost;Database=misc;Uid=root;",
+                ServerVersion.Parse("10.4.13-mariadb"),
+                mySqlOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorNumbersToAdd: null);
+                });
+            });
+            services.AddDbContext<UserContext>(options =>
+            {
+                options.UseMySql(
+                "Server=localhost;Database=user;Uid=root;",
+                ServerVersion.Parse("10.4.13-mariadb"),
+                mySqlOptionsAction: sqlOptions =>
+                {
+                    sqlOptions.EnableRetryOnFailure(
+                    maxRetryCount: 10,
+                    maxRetryDelay: TimeSpan.FromSeconds(5),
+                    errorNumbersToAdd: null);
+                });
+            });
 
             services.AddScoped<IMiscUnitOfWork, MiscUnitOfWork>();
             services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();

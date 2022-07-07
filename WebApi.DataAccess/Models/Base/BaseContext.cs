@@ -2,11 +2,12 @@
 
 namespace WebApi.DataAccess.Models.Base
 {
-    public abstract class BaseContext : DbContext
+    public abstract class BaseContext<TContext> : DbContext
+        where TContext : DbContext
     {
         public BaseContext() { }
 
-        public BaseContext(DbContextOptions<BaseContext> options) : base(options) { }
+        public BaseContext(DbContextOptions<TContext> options) : base(options) { }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
