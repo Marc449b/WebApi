@@ -1,5 +1,5 @@
 ﻿using WebApi.DataAccess.Repository.Base.Interface;
-using Model = WebApi.DataAccess.Models.Derived.Misc.JsonObject.JsonEntity;
+using Model = WebApi.DataAccess.Models.Derived.Misc.JsonEntity.JsonEntity;
 
 
 namespace WebApi.DataAccess.Repository.Derived.Misc.JsonEntity.Interface

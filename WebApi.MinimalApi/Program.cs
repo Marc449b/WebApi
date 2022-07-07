@@ -2,7 +2,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
 using WebApi.DataAccess;
-using WebApi.DataAccess.Models.Derived.Misc.JsonObject;
+using WebApi.DataAccess.Models.Derived.Misc.JsonEntity;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -26,6 +26,8 @@ app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToke
     try
     {
         var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+
+
         return json is not null ? Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) }) : Results.NotFound();
     }
     catch (Exception ex)
