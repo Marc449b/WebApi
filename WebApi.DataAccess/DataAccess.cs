@@ -60,6 +60,7 @@ namespace WebApi.DataAccess
 
         public static void AddMapster(this IServiceCollection services)
         {
+            TypeAdapterConfig.GlobalSettings.EnableJsonMapping();
             var typeAdapterConfig = TypeAdapterConfig.GlobalSettings;
 
             // Apply mappings

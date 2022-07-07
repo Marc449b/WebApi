@@ -24,6 +24,12 @@
             CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Updates an entity.
+        /// </summary>
+        /// <param name="model"></param>
+        void Update(TModel model);
+
+        /// <summary>
         /// Removes an entity.
         /// </summary>
         /// <param name="model"></param>

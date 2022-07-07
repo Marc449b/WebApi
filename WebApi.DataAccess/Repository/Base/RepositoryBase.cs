@@ -18,16 +18,25 @@ namespace WebApi.DataAccess.Repository.Base
         }
 
 
+        // Create
         public virtual async Task AddAsync(TModel model, CancellationToken cancellationToken = default)
         {
             await context.AddAsync(model, cancellationToken);
         }
 
+        // Read
         public virtual async Task<TDto> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
         {
             return await context.Set<TModel>().ProjectToType<TDto>().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
 
+        // Update
+        public virtual void Update(TModel model)
+        {
+            context.Set<TModel>().Update(model);
+        }
+
+        // Delete
         public virtual void Remove(TModel model)
         {
             context.Remove(model);

@@ -1,8 +1,10 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
+using System.Threading;
 using WebApi.DataAccess;
 using WebApi.DataAccess.Models.Derived.Misc.JsonEntity;
+using WebApi.DataAccess.UnitOfWork.Derived.Misc;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken, Guid id) =>
+app.MapGet("/json/{id}", async (Guid id, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
 {
     try
     {
@@ -40,12 +42,34 @@ app.MapPost("/json", async (object obj, IMiscUnitOfWork miscUnitOfWork, Cancella
     {
         var json = new JsonEntity()
         {
-            Data = JObject.Parse(obj.ToString()!)
+            Data = JObject.Parse(obj.ToString())
         };
         await miscUnitOfWork.JsonEntityRepository.AddAsync(json, cancellationToken);
         await miscUnitOfWork.SaveChangesAsync(cancellationToken);
 
         return Results.Created($"/json/{json.Id}", new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
+    }
+    catch (Exception ex)
+    {
+        return Results.Problem(ex.Message);
+    }
+});
+
+app.MapPut("/json/{id}", async (Guid id, object obj, IMiscUnitOfWork miscUnitOfWork, CancellationToken cancellationToken) =>
+{
+    try
+    {
+        var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
+        if (json is null)
+            Results.NotFound();
+
+        var model = json.ToEntity();
+        model.Data = JObject.Parse(obj.ToString());
+        
+        miscUnitOfWork.JsonEntityRepository.Update(model);
+        await miscUnitOfWork.SaveChangesAsync(cancellationToken);
+
+        return Results.Created($"/json/{json.Id}", new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(model.Data)) });
     }
     catch (Exception ex)
     {
