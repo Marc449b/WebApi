@@ -6,11 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using WebApi.DataAccess.Dto.Base;
 using WebApi.DataAccess.Models.Derived.Misc;
-using WebApi.DataAccess.Models.Derived.User;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
-using WebApi.DataAccess.UnitOfWork.Derived.User;
-using WebApi.DataAccess.UnitOfWork.Derived.User.Interface;
 
 namespace WebApi.DataAccess
 {
@@ -40,22 +37,8 @@ namespace WebApi.DataAccess
                     errorNumbersToAdd: null);
                 });
             });
-            services.AddDbContext<UserContext>(options =>
-            {
-                options.UseMySql(
-                connectionStrings.User,
-                ServerVersion.Parse("10.4.13-mariadb"),
-                mySqlOptionsAction: sqlOptions =>
-                {
-                    sqlOptions.EnableRetryOnFailure(
-                    maxRetryCount: 10,
-                    maxRetryDelay: TimeSpan.FromSeconds(5),
-                    errorNumbersToAdd: null);
-                });
-            });
 
             services.AddScoped<IMiscUnitOfWork, MiscUnitOfWork>();
-            services.AddScoped<IUserUnitOfWork, UserUnitOfWork>();
         }
 
         public static void AddMapster(this IServiceCollection services)
@@ -71,6 +54,7 @@ namespace WebApi.DataAccess
             services.AddSingleton(typeAdapterConfig);
             services.AddScoped<IMapper, ServiceMapper>();
         }
+
 
         internal class ConnectionStrings
         {

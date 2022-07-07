@@ -1,10 +1,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Text.Json;
-using System.Threading;
 using WebApi.DataAccess;
 using WebApi.DataAccess.Models.Derived.Misc.JsonEntity;
-using WebApi.DataAccess.UnitOfWork.Derived.Misc;
 using WebApi.DataAccess.UnitOfWork.Derived.Misc.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
