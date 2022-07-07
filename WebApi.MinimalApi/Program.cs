@@ -26,7 +26,7 @@ app.MapGet("/json/{id}", async (IMiscUnitOfWork miscUnitOfWork, CancellationToke
     try
     {
         var json = await miscUnitOfWork.JsonEntityRepository.GetByIdAsync(id, cancellationToken);
-        return Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) });
+        return json is not null ? Results.Ok(new { json.Id, Entities = JsonDocument.Parse(JsonConvert.SerializeObject(json.Data)) }) : Results.NotFound();
     }
     catch (Exception ex)
     {
